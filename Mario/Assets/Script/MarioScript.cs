@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MarioScript : MonoBehaviour
 {
@@ -12,12 +14,20 @@ public class MarioScript : MonoBehaviour
     private float Down = 3;
     private float SlowJump = 2;
     private new Rigidbody2D rigidbody;
-
+    private bool IsDead = false;
+    private bool Win = false;
     private bool QuayPhai = true;
     private Animator animator;
+
+    public event EventHandler GameOverEvent;
+    private void OnGameOver()
+    {
+
+    }
     // Start is called before the first frame update
     void Start()
     {
+        IsDead = false;
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -37,30 +47,38 @@ public class MarioScript : MonoBehaviour
     }
     void DiChuyen()
     {
-        float phimQuaLai = Input.GetAxis("Horizontal");
-        rigidbody.velocity = new Vector2(VanToc * phimQuaLai, rigidbody.velocity.y);
-        TocDo = Mathf.Abs(VanToc * phimQuaLai);
-        if(phimQuaLai>0 && !QuayPhai)
+        if (IsDead == false)
         {
-            HuongMat();
+            float phimQuaLai = Input.GetAxis("Horizontal");
+            rigidbody.velocity = new Vector2(VanToc * phimQuaLai, rigidbody.velocity.y);
+            TocDo = Mathf.Abs(VanToc * phimQuaLai);
+            if (phimQuaLai > 0 && !QuayPhai)
+            {
+                HuongMat();
+            }
+            if (phimQuaLai < 0 && QuayPhai)
+            {
+                HuongMat();
+            }
         }
-        if (phimQuaLai < 0 && QuayPhai)
-        {
-            HuongMat();
-        }
+        
     }
     void HuongMat()
     {
-        QuayPhai = !QuayPhai;
-        Vector2 Huong = transform.localScale;
-        Huong.x *= -1;
-        transform.localScale = Huong;
-        if (TocDo > 0) StartCoroutine(MarioChuyenHuong());
+        if(IsDead == false)
+        {
+            QuayPhai = !QuayPhai;
+            Vector2 Huong = transform.localScale;
+            Huong.x *= -1;
+            transform.localScale = Huong;
+            if (TocDo > 0) StartCoroutine(MarioChuyenHuong());
+        }
+        
     }
     void NhayLen()
     {
         
-        if (Input.GetKeyDown(KeyCode.W) && DuoiDat == true && transform.position.y < 2 )
+        if (Input.GetKeyDown(KeyCode.W) && DuoiDat == true && transform.position.y < 2 && IsDead == false)
         {
             rigidbody.AddForce((Vector2.up)* NhayCao);
             DuoiDat = false;
@@ -69,7 +87,7 @@ public class MarioScript : MonoBehaviour
         {
             rigidbody.velocity += Vector2.up * Physics2D.gravity.y * (Down - 1) * Time.deltaTime;
         }
-        else if (rigidbody.velocity.y > 0 && !Input.GetKey(KeyCode.W))
+        else if (rigidbody.velocity.y > 0 && !Input.GetKey(KeyCode.W) && IsDead == false)
         {
             rigidbody.velocity += Vector2.up * Physics2D.gravity.y * (SlowJump - 1) * Time.deltaTime;
         }
@@ -80,6 +98,17 @@ public class MarioScript : MonoBehaviour
         {
             DuoiDat = true;
         }
+        if (collision.tag == "Dead" )
+        {
+            IsDead = true;
+            SceneManager.LoadScene("GameOver");
+        }
+        if(collision.tag == "Win")
+        {
+            Win = true; IsDead = true;
+            SceneManager.LoadScene("YouWin");
+        }
+        
     }
     IEnumerator MarioChuyenHuong()
     {

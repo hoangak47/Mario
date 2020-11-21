@@ -54,9 +54,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\MarioScript.cs" />
-    <Compile Include="Assets\Script\Camera.cs" />
-    <Compile Include="Assets\Script\ChamHOi.cs" />
     <Compile Include="Assets\Script\Score.cs" />
+    <Compile Include="Assets\Script\ChamHOi.cs" />
+    <Compile Include="Assets\Script\Camera.cs" />
+    <Compile Include="Assets\Script\Restart.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

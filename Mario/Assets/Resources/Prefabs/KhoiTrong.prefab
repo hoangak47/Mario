@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 205292917461872098}
   - component: {fileID: 6022557616661866355}
   m_Layer: 0
-  m_Name: Khoi
-  m_TagString: Untagged
+  m_Name: KhoiTrong
+  m_TagString: MatDat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
